@@ -13,10 +13,6 @@ type Task struct {
 	Completed bool
 }
 
-func completeTask(t *[]Task, index int){
-	(*t)[index].Completed = true
-}
-
 func viewAllTasks(t []Task) {
 	var task string
 
@@ -30,6 +26,10 @@ func viewAllTasks(t []Task) {
 		}
 	}
 	
+}
+
+func removeTask(t []Task, index int) []Task {
+	return append(t[:index], t[index+1:]...)
 }
 
 func main(){
@@ -48,7 +48,7 @@ func main(){
 	scanner.Scan()
 	index := scanner.Text()
 
-	indexComp, _ := strconv.Atoi(index)
+	indexRem, _ := strconv.Atoi(index)
 
 
 	allTasks := []Task{}
@@ -60,19 +60,24 @@ func main(){
 		allTasks = append(allTasks, newTask)
 
 	}
-	completeTask(&allTasks , indexComp)
+	var taskRemoved string 
 
-	viewAllTasks(allTasks)
+	taskRemoved = allTasks[indexRem].Name
+
+	newSlice := removeTask(allTasks, indexRem)
+
+	viewAllTasks(newSlice)
 	
-	fmt.Printf("Task '%s' marked as completed!\n", allTasks[indexComp].Name)
+	fmt.Printf("Task '%s' removed successfully!\n", taskRemoved)
 	// summary
 	completed_count := 0
-	for _, task := range allTasks{
+	for _, task := range newSlice{
 		if task.Completed{
 			completed_count++
 		}
 	}
-	incomplete_count:= taskInt- completed_count
-	fmt.Printf("Total: %d tasks (%d completed, %d remaining)", taskInt, completed_count,incomplete_count)
+	incomplete_count:= taskInt -1 - completed_count
+	fmt.Printf("Total: %d tasks (%d completed, %d remaining)", taskInt-1, completed_count,incomplete_count)
 
 }
+
